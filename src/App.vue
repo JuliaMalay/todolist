@@ -1,37 +1,28 @@
 <template>
-  <form @submit.prevent>
-    <input
-      v-bind:value="title"
-      @input="title = $event.target.value"
-      type="text"
-      name=""
-      id=""
-      placeholder=""
-    />
-    <button @click="createTask">Создать</button>
-    <input type="checkbox" v-model="important" />
-  </form>
-  <div class="task" :key="task.id" v-for="task in tasks">
-    <input
-      v-model="task.checked"
-      v-bind:id="task.id"
-      type="checkbox"
-      name="check"
-    />
-    <div>
-      <strong>{{ task.title }}</strong>
-    </div>
-    <div>{{ task.date }}</div>
-    <div v-show="task.important" class="important"></div>
-  </div>
+  <task-form @create="createTask"></task-form>
+  <task-list :tasks="tasks" @remove="removeTask"></task-list>
+  <button-add @click="showModal"> Открыть окно </button-add>
+  <modal-window
+    v-model:show="modalVisible"
+    @close="modalVisible = false"
+    @rightBtnAction="removeTask"
+    rightBtnTitle="Удалить"
+    :modalTitle="modalTitle"
+    :task="task"
+    :countButton="true"
+  >
+    Мое окно</modal-window
+  >
 </template>
 
 <script>
+import TaskForm from './components/TaskForm.vue';
+import TaskList from './components/TaskList.vue';
 // import Task from './components/Task.vue';
 
 export default {
   name: 'App',
-  components: {},
+  components: {TaskList, TaskForm},
   data() {
     return {
       tasks: [
@@ -57,22 +48,26 @@ export default {
           important: false,
         },
       ],
-      title: '',
-      important: false,
+      modalVisible: false,
+      modalTitle: 'Имя окна 2',
     };
   },
   methods: {
-    createTask() {
-      const newTask = {
-        id: Date.now(),
-        title: this.title,
-        date: new Date().toLocaleString('ru-RU'),
-        checked: false,
-        important: this.important,
-      };
-      this.tasks.push(newTask);
-      this.important = false;
-      this.title = '';
+    createTask(task) {
+      // console.log(task);
+      this.tasks.push(task);
+    },
+    removeTask(task) {
+      this.modalVisible = true;
+      this.modalTitle = task.title;
+    },
+    removeTaskMain(task) {
+      console.log('Дохожу');
+      // console.log('task', task);
+      this.tasks = this.tasks.filter((t) => t.id !== task.id);
+    },
+    showModal() {
+      this.modalVisible = true;
     },
   },
 };
@@ -86,15 +81,5 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
-}
-.task {
-  display: flex;
-  align-items: center;
-}
-.important {
-  background-color: red;
-  border-radius: 50%;
-  width: 10px;
-  height: 10px;
 }
 </style>

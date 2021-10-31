@@ -1,16 +1,33 @@
 <template>
   <div class="task">
-    <h3>{{ title }}</h3>
-    <p>{{ date }}</p>
+    <div style="display: flex; align-items: center">
+      <checkbox v-model:isChecked="checked"></checkbox>
+      <div v-show="task.important" class="important"></div>
+      <div>
+        <strong>{{ task.title }}</strong>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center">
+      <div>{{ task.date }}</div>
+      <button @click="$emit('remove', task)">X</button>
+    </div>
   </div>
+  <!-- v-model="task.checked" -->
 </template>
 
 <script>
 export default {
   name: 'task',
   props: {
-    title: String,
-    date: String,
+    task: {
+      type: Object,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      checked: false,
+    };
   },
 };
 </script>
