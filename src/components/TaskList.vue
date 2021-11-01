@@ -5,7 +5,7 @@
       :key="task.id"
       v-for="task in tasks"
       :task="task"
-      @remove="$emit('remove', task)"
+      @showModal="$emit('showModal', task)"
     ></task>
   </div>
   <h2 v-else>Список задач пуст</h2>

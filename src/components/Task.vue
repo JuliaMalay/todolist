@@ -9,7 +9,7 @@
     </div>
     <div style="display: flex; align-items: center">
       <div>{{ task.date }}</div>
-      <button @click="$emit('remove', task)">X</button>
+      <button @click="showModal">X</button>
     </div>
   </div>
   <!-- v-model="task.checked" -->
@@ -28,6 +28,13 @@ export default {
     return {
       checked: false,
     };
+  },
+  methods: {
+    showModal() {
+      this.$emit('showModal', this.task);
+      // this.$store.commit('SET_CURRENT_TASK', this.task);
+      // this.$store.commit('SHOW_MODAL');
+    },
   },
 };
 </script>

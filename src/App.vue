@@ -1,14 +1,14 @@
 <template>
   <task-form @create="createTask"></task-form>
-  <task-list :tasks="tasks" @remove="removeTask"></task-list>
+  <task-list :tasks="GET_ALL_TASKS" @showModal="showModal"></task-list>
   <button-add @click="showModal"> Открыть окно </button-add>
   <modal-window
-    v-model:show="modalVisible"
+    v-model="$store.getters"
     @close="modalVisible = false"
     @rightBtnAction="removeTask"
     rightBtnTitle="Удалить"
     :modalTitle="modalTitle"
-    :task="task"
+    :task="GET_CURRENT_TASK"
     :countButton="true"
   >
     Мое окно</modal-window
@@ -18,41 +18,48 @@
 <script>
 import TaskForm from './components/TaskForm.vue';
 import TaskList from './components/TaskList.vue';
-// import Task from './components/Task.vue';
+import {mapActions, mapGetters} from 'vuex';
 
 export default {
   name: 'App',
   components: {TaskList, TaskForm},
-  data() {
-    return {
-      tasks: [
-        {
-          id: 1,
-          title: 'First Task',
-          date: '14:10',
-          checked: false,
-          important: false,
-        },
-        {
-          id: 2,
-          title: 'Second Task',
-          date: '16:40',
-          checked: false,
-          important: false,
-        },
-        {
-          id: 3,
-          title: 'Third Task',
-          date: '21.11.2021, 12:44:57',
-          checked: false,
-          important: false,
-        },
-      ],
-      modalVisible: false,
-      modalTitle: 'Имя окна 2',
-    };
+  // data() {
+  //   return {
+  //     tasks: [
+  //       {
+  //         id: 1,
+  //         title: 'First Task',
+  //         date: '14:10',
+  //         checked: false,
+  //         important: false,
+  //       },
+  //       {
+  //         id: 2,
+  //         title: 'Second Task',
+  //         date: '16:40',
+  //         checked: false,
+  //         important: false,
+  //       },
+  //       {
+  //         id: 3,
+  //         title: 'Third Task',
+  //         date: '21.11.2021, 12:44:57',
+  //         checked: false,
+  //         important: false,
+  //       },
+  //     ],
+  //     modalVisible: false,
+  //     modalTitle: 'Имя окна 2',
+  //   };
+  // },
+  mounted() {
+    this.GET_TASKS_FROM_API();
+  },
+  computed: {
+    ...mapGetters(['GET_ALL_TASKS', 'GET_MODAL_VISIBLE', 'GET_CURRENT_TASK']),
   },
   methods: {
+    ...mapActions(['GET_TASKS_FROM_API']),
     createTask(task) {
       // console.log(task);
       this.tasks.push(task);
@@ -66,8 +73,9 @@ export default {
       // console.log('task', task);
       this.tasks = this.tasks.filter((t) => t.id !== task.id);
     },
-    showModal() {
+    showModal(task) {
       this.modalVisible = true;
+      this.currentTask = task;
     },
   },
 };
