@@ -1,7 +1,7 @@
 <template>
   <div class="task">
     <div style="display: flex; align-items: center">
-      <checkbox v-model:isChecked="checked"></checkbox>
+      <checkbox></checkbox>
       <div v-show="task.important" class="important"></div>
       <div>
         <strong>{{ task.title }}</strong>
@@ -9,7 +9,7 @@
     </div>
     <div style="display: flex; align-items: center">
       <div>{{ task.date }}</div>
-      <button @click="showModal">X</button>
+      <button @click="deleteTask">X</button>
     </div>
   </div>
   <!-- v-model="task.checked" -->
@@ -31,9 +31,11 @@ export default {
   },
   methods: {
     showModal() {
-      this.$emit('showModal', this.task);
-      // this.$store.commit('SET_CURRENT_TASK', this.task);
-      // this.$store.commit('SHOW_MODAL');
+      this.$store.commit('SET_CURRENT_TASK', this.task);
+      this.$store.commit('SHOW_MODAL');
+    },
+    deleteTask() {
+      this.$emit('deleteTask');
     },
   },
 };

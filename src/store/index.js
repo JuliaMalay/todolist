@@ -15,6 +15,12 @@ const store = createStore({
         commit('SET_TASKS_TO_VUEX', response.data);
       });
     },
+    DELETE_TASK({commit}, index) {
+      commit('REMOVE_TASK', index);
+    },
+    CREATE_TASK({commit}, task) {
+      commit('CREATE_NEW_TASK', task);
+    },
   },
   mutations: {
     SET_TASKS_TO_VUEX: (state, tasks) => {
@@ -28,6 +34,12 @@ const store = createStore({
     },
     SET_CURRENT_TASK(state, payload) {
       state.currentTask = payload;
+    },
+    REMOVE_TASK(state, index) {
+      state.tasks.splice(index, 1);
+    },
+    CREATE_NEW_TASK(state, task) {
+      state.tasks.push(task);
     },
   },
   getters: {
