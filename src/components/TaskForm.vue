@@ -14,12 +14,11 @@
       />Срочно</label
     >
 
-    <button-add @click="createTask(task)">Создать</button-add>
+    <button-add @click="createTask">Создать</button-add>
   </form>
 </template>
 
 <script>
-import {mapActions} from 'vuex';
 export default {
   data() {
     return {
@@ -31,8 +30,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['GET_TASKS_FROM_API', 'DELETE_TASK', 'CREATE_TASK']),
-    createTask(task) {
+    createTask() {
       if (this.task.title) {
         this.task.id = Date.now();
         (this.task.date = new Date().toLocaleString('ru-RU')),
@@ -42,7 +40,6 @@ export default {
           title: '',
         };
       }
-      this.CREATE_TASK(task);
     },
   },
 };
