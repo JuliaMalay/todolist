@@ -1,5 +1,5 @@
 <template>
-  <task-form @create="createTask"></task-form>
+  <task-form></task-form>
   <task-list :tasks="GET_ALL_TASKS" @showModal="showModal"></task-list>
   <button-add @click="showModal"> Открыть окно </button-add>
   <modal-window
@@ -13,16 +13,19 @@
   >
     Мое окно</modal-window
   >
+  <todos :todos="GET_ALL_LISTS"></todos>
+  <router-view></router-view>
 </template>
 
 <script>
 import TaskForm from './components/TaskForm.vue';
 import TaskList from './components/TaskList.vue';
 import {mapActions, mapGetters} from 'vuex';
+import Todos from './components/UI/Todos.vue';
 
 export default {
   name: 'App',
-  components: {TaskList, TaskForm},
+  components: {TaskList, TaskForm, Todos},
   // data() {
   //   return {
   //     tasks: [
@@ -53,17 +56,23 @@ export default {
   //   };
   // },
   mounted() {
-    this.GET_TASKS_FROM_API();
+    // this.GET_TASKS_FROM_API();
+    this.GET_ALL_LISTS_ACT;
   },
   computed: {
-    ...mapGetters(['GET_ALL_TASKS', 'GET_MODAL_VISIBLE', 'GET_CURRENT_TASK']),
+    ...mapGetters([
+      'GET_ALL_TASKS',
+      'GET_MODAL_VISIBLE',
+      'GET_CURRENT_TASK',
+      'GET_ALL_LISTS',
+    ]),
   },
   methods: {
-    ...mapActions(['GET_TASKS_FROM_API']),
-    createTask(task) {
-      // console.log(task);
-      this.tasks.push(task);
-    },
+    ...mapActions(['GET_TASKS_FROM_API', 'GET_ALL_LISTS_ACT']),
+    // createTask(task) {
+    //   // console.log(task);
+    //   this.tasks.push(task);
+    // },
     removeTask(task) {
       this.modalVisible = true;
       this.modalTitle = task.title;
