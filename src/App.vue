@@ -1,7 +1,7 @@
 <template>
+  <modal-register></modal-register>
   <task-form></task-form>
   <task-list :tasks="GET_ALL_TASKS" @showModal="showModal"></task-list>
-  <button-add @click="showModal"> Открыть окно </button-add>
   <modal-window
     v-model="$store.getters"
     @close="modalVisible = false"
@@ -13,6 +13,7 @@
   >
     Мое окно</modal-window
   >
+
   <todos :todos="GET_ALL_LISTS"></todos>
   <router-view></router-view>
 </template>
@@ -21,11 +22,12 @@
 import TaskForm from './components/TaskForm.vue';
 import TaskList from './components/TaskList.vue';
 import {mapActions, mapGetters} from 'vuex';
-import Todos from './components/UI/Todos.vue';
+import Todos from './components/Todos.vue';
+import ModalRegister from './components/UI/modal/ModalRegister.vue';
 
 export default {
   name: 'App',
-  components: {TaskList, TaskForm, Todos},
+  components: {TaskList, TaskForm, Todos, ModalRegister},
   // data() {
   //   return {
   //     tasks: [

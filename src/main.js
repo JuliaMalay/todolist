@@ -3,6 +3,7 @@ import App from './App.vue';
 import components from '@/components/UI';
 import store from './store';
 import router from './router';
+// import Vuelidate from 'vuelidate';
 
 // Create a new store instance.
 
@@ -12,4 +13,5 @@ components.forEach((component) => {
 });
 app.use(router);
 app.use(store);
+// app.use(Vuelidate);
 app.mount('#app');

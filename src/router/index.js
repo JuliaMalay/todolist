@@ -1,5 +1,5 @@
 import {createRouter, createWebHashHistory} from 'vue-router';
-import Todos from '../components/UI/Todos';
+import Todos from '../components/Todos';
 import TaskList from '../components/TaskList';
 
 const routes = [
