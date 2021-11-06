@@ -1,8 +1,10 @@
 import {createApp} from 'vue';
-import App from './App.vue';
+// import App from './App.vue';
+import App from './App2.vue';
 import components from '@/components/UI';
 import store from './store';
-import router from './router';
+// import router from './router';
+import router from './router.js';
 // import Vuelidate from 'vuelidate';
 
 // Create a new store instance.

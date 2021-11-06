@@ -1,7 +1,7 @@
 <template>
   <form @submit.prevent class="form">
     <input-add
-      v-model.trim="task.title"
+      v-model.trim="task.name"
       type="text"
       name="title"
       placeholder="Введите дело"
@@ -9,7 +9,7 @@
     <label for="important">
       <input
         type="checkbox"
-        v-model="task.important"
+        v-model="task.urgency"
         id="important"
       />Срочно</label
     >
@@ -21,25 +21,34 @@
 <script>
 import {mapActions} from 'vuex';
 export default {
+  props: {
+    listId: {
+      type: Number,
+      required: true,
+    },
+  },
   data() {
     return {
       task: {
-        title: '',
-        important: false,
-        checked: false,
+        name: '',
+        is_completed: false,
+        lists_id: parseInt(this.listId),
+        urgency: false,
       },
     };
   },
   methods: {
     ...mapActions(['CREATE_TASK']),
     createTask(task) {
-      if (this.task.title) {
-        this.task.id = Date.now();
-        (this.task.date = new Date().toLocaleString('ru-RU')),
-          this.CREATE_TASK(task);
+      console.log(task);
+
+      if (this.task.name) {
+        this.CREATE_TASK(task);
         this.task = {
-          important: false,
-          title: '',
+          name: '',
+          is_completed: false,
+          list_id: this.listId,
+          urgency: false,
         };
       }
     },

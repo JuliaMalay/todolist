@@ -28,35 +28,6 @@ import ModalRegister from './components/UI/modal/ModalRegister.vue';
 export default {
   name: 'App',
   components: {TaskList, TaskForm, Todos, ModalRegister},
-  // data() {
-  //   return {
-  //     tasks: [
-  //       {
-  //         id: 1,
-  //         title: 'First Task',
-  //         date: '14:10',
-  //         checked: false,
-  //         important: false,
-  //       },
-  //       {
-  //         id: 2,
-  //         title: 'Second Task',
-  //         date: '16:40',
-  //         checked: false,
-  //         important: false,
-  //       },
-  //       {
-  //         id: 3,
-  //         title: 'Third Task',
-  //         date: '21.11.2021, 12:44:57',
-  //         checked: false,
-  //         important: false,
-  //       },
-  //     ],
-  //     modalVisible: false,
-  //     modalTitle: 'Имя окна 2',
-  //   };
-  // },
   mounted() {
     // this.GET_TASKS_FROM_API();
     this.GET_ALL_LISTS_ACT;
@@ -72,7 +43,6 @@ export default {
   methods: {
     ...mapActions(['GET_TASKS_FROM_API', 'GET_ALL_LISTS_ACT']),
     // createTask(task) {
-    //   // console.log(task);
     //   this.tasks.push(task);
     // },
     removeTask(task) {
@@ -80,8 +50,6 @@ export default {
       this.modalTitle = task.title;
     },
     removeTaskMain(task) {
-      console.log('Дохожу');
-      // console.log('task', task);
       this.tasks = this.tasks.filter((t) => t.id !== task.id);
     },
     showModal(task) {

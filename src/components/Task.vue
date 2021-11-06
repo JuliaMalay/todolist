@@ -2,13 +2,13 @@
   <div class="task">
     <div style="display: flex; align-items: center">
       <checkbox v-model:isChecked="checked"></checkbox>
-      <div v-show="task.important" class="important"></div>
+      <div v-show="task.urgency" class="important"></div>
       <div>
-        <strong>{{ task.title }}</strong>
+        <strong>{{ task.name }}</strong>
       </div>
     </div>
     <div style="display: flex; align-items: center">
-      <div>{{ task.date }}</div>
+      <div>{{ task.is_completed }}</div>
       <button @click="deleteTask">X</button>
     </div>
   </div>
@@ -29,6 +29,7 @@ export default {
       checked: false,
     };
   },
+  created() {},
   methods: {
     deleteTask() {
       this.$emit('deleteTask');
