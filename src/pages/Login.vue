@@ -1,60 +1,68 @@
 <template>
-  <form @submit.prevent="handleLogin">
-    <div
-      class="form-group"
-      :class="{'form-group--error': v$.user.email.$error}"
-    >
-      <label class="form__label">E-mail</label>
-      <input-add
-        v-model.trim="v$.user.email.$model"
-        type="text"
-        name="email"
-        placeholder="Введите email"
+  <div class="wrapperLogin">
+    <form @submit.prevent="handleLogin" class="formLogin">
+      <h4>Войти</h4>
+      <div
+        class="form-group"
+        :class="{'form-group--error': v$.user.email.$error}"
       >
-      </input-add>
-      <div class="error" v-if="!v$.user.email.email">
-        Введите коректный email
+        <label for="email" class="form__label">E-mail</label>
+        <input-add
+          class="input"
+          v-model.trim="v$.user.email.$model"
+          type="text"
+          name="email"
+          id="email"
+          placeholder="Введите email"
+        >
+        </input-add>
+        <div class="error" v-if="!v$.user.email.email">
+          Введите коректный email
+        </div>
       </div>
-    </div>
-    <div
-      class="form-group"
-      :class="{'form-group--error': v$.user.password.$error}"
-    >
-      <label class="form__label">Пароль</label>
-      <input
-        class="form__input"
-        v-model.trim="v$.user.password.$model"
-        placeholder="Введите пароль"
-      />
-    </div>
-    <div class="error" v-if="!v$.user.password.required">
-      Password is required.
-    </div>
-    <div class="error" v-if="!v$.user.password.minLength">
-      Password must have at least
-      {{ v$.user.password.$params.minLength.min }} letters.
-    </div>
-    <label
-      >Не зарегистрированны?<router-link to="/signup"
-        >Регистрация</router-link
-      ></label
-    >
-    <button-add
-      class="button"
-      type="submit"
-      :disabled="submitStatus === 'PENDING'"
-    >
-      Войти
-    </button-add>
+      <div
+        class="form-group"
+        :class="{'form-group--error': v$.user.password.$error}"
+      >
+        <label for="password" class="form__label">Пароль</label>
+        <input
+          id="password"
+          class="form__input input"
+          v-model.trim="v$.user.password.$model"
+          placeholder="Введите пароль"
+        />
+      </div>
+      <div class="error" v-if="!v$.user.password.required">
+        Password is required.
+      </div>
+      <div class="error" v-if="!v$.user.password.minLength">
+        Password must have at least
+        {{ v$.user.password.$params.minLength.min }} letters.
+      </div>
+      <div class="form-group">
+        <label
+          >Не зарегистрированны?<router-link to="/signup"
+            >Регистрация</router-link
+          ></label
+        >
+      </div>
+      <button-add
+        class="button"
+        type="submit"
+        :disabled="submitStatus === 'PENDING'"
+      >
+        Войти
+      </button-add>
 
-    <p class="typo__p" v-if="submitStatus === 'OK'">
-      Thanks for your submission!
-    </p>
-    <p class="typo__p" v-if="submitStatus === 'ERROR'">
-      Please fill the form correctly.
-    </p>
-    <p class="typo__p" v-if="submitStatus === 'PENDING'">Sending...</p>
-  </form>
+      <p class="typo__p" v-if="submitStatus === 'OK'">
+        Thanks for your submission!
+      </p>
+      <p class="typo__p" v-if="submitStatus === 'ERROR'">
+        Please fill the form correctly.
+      </p>
+      <p class="typo__p" v-if="submitStatus === 'PENDING'">Sending...</p>
+    </form>
+  </div>
 </template>
 
 <script>
@@ -96,7 +104,7 @@ export default {
   },
   created() {
     if (this.loggedIn) {
-      this.$router.push('/Lists');
+      this.$router.push('/');
     }
   },
   methods: {
@@ -117,7 +125,7 @@ export default {
 
         this.$store.dispatch('auth/login', this.user).then(
           () => {
-            this.$router.push('/lists');
+            this.$router.push('/');
           },
           (error) => {
             this.loading = false;
@@ -138,5 +146,35 @@ export default {
 <style>
 .is-invalid {
   border: 1px solid red;
+}
+.wrapperLogin {
+  display: flex;
+  min-height: 100vh;
+  padding: 15px;
+  justify-content: center;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.formLogin {
+  border: 1px solid blue;
+  max-height: 350px;
+  padding: 20px;
+  border-radius: 20px;
+}
+.form__input {
+  border-radius: 25px;
+  padding: 15px 30px;
+  color: #0f7bff;
+  border: 2px solid #0f7bff;
+}
+.button {
+  padding: 15px 35px;
+}
+.input {
+  width: 100%;
 }
 </style>

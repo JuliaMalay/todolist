@@ -1,61 +1,18 @@
 <template>
-  <modal-register></modal-register>
-  <task-form></task-form>
-  <task-list :tasks="GET_ALL_TASKS" @showModal="showModal"></task-list>
-  <modal-window
-    v-model="$store.getters"
-    @close="modalVisible = false"
-    @rightBtnAction="removeTask"
-    rightBtnTitle="Удалить"
-    :modalTitle="modalTitle"
-    :task="GET_CURRENT_TASK"
-    :countButton="true"
-  >
-    Мое окно</modal-window
-  >
-
-  <todos :todos="GET_ALL_LISTS"></todos>
-  <router-view></router-view>
+  <div class="App">
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
-import TaskForm from './components/TaskForm.vue';
-import TaskList from './components/TaskList.vue';
-import {mapActions, mapGetters} from 'vuex';
-import Todos from './components/Todos.vue';
-import ModalRegister from './components/UI/modal/ModalRegister.vue';
-
 export default {
   name: 'App',
-  components: {TaskList, TaskForm, Todos, ModalRegister},
-  mounted() {
-    // this.GET_TASKS_FROM_API();
-    this.GET_ALL_LISTS_ACT;
-  },
-  computed: {
-    ...mapGetters([
-      'GET_ALL_TASKS',
-      'GET_MODAL_VISIBLE',
-      'GET_CURRENT_TASK',
-      'GET_ALL_LISTS',
-    ]),
-  },
-  methods: {
-    ...mapActions(['GET_TASKS_FROM_API', 'GET_ALL_LISTS_ACT']),
-    // createTask(task) {
-    //   this.tasks.push(task);
-    // },
-    removeTask(task) {
-      this.modalVisible = true;
-      this.modalTitle = task.title;
-    },
-    removeTaskMain(task) {
-      this.tasks = this.tasks.filter((t) => t.id !== task.id);
-    },
-    showModal(task) {
-      this.modalVisible = true;
-      this.currentTask = task;
-    },
+  components: {},
+  mounted() {},
+  computed: {},
+  methods: {},
+  created() {
+    this.$router.push('/login');
   },
 };
 </script>
@@ -67,6 +24,45 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+}
+.App {
+  margin: 0;
+  padding: 0;
+}
+*,
+*::before,
+*::after {
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+  line-height: 150%;
+  font-size: 16px;
+  color: #000;
+  font-weight: 300;
+  font-family: 'Quicksand', sans-serif;
+  background-color: #fff;
+  font-style: normal;
+  height: 100vh;
+  overflow: hidden;
+}
+a:focus,
+a:active {
+  outline: none;
+}
+a,
+a:visited {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: none;
+  color: blue;
+}
+a {
+  color: rgb(106, 170, 255);
 }
 </style>

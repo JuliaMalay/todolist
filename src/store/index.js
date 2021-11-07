@@ -67,8 +67,6 @@ const store = createStore({
         method: 'POST',
         data: payload,
         headers: {'Content-Type': 'application/json'},
-      }).then((response) => {
-        console.log(response);
       });
     },
     async LOGIN({commit}, payload) {
@@ -78,7 +76,6 @@ const store = createStore({
         data: payload,
         headers: {'Content-Type': 'application/json'},
       }).then((response) => {
-        console.log(response);
         if (response.data.data.access_token) {
           localStorage.setItem('user', JSON.stringify(response.data.data));
         }
@@ -91,21 +88,66 @@ const store = createStore({
     GET_ALL_LISTS_ACT({commit}) {
       commit('GET_ALL_LISTS');
     },
-    CREATE_TASK({commit}, dataTask) {
-      console.log(dataTask);
-      const data = {attributes: dataTask};
-      TodoService.createTask(data).then((response) => {
-        commit('SET_TASK', response.data.data);
+    async CREATE_TASK({commit}, dataTask) {
+      await TodoService.createTask(dataTask).then((response) => {
+        commit('SET_TASK', response.data.data.attributes);
+        console.log(JSON.stringify(response.data.data.attributes));
       });
     },
-    DELETE_TASK({commit}, index) {
-      commit('REMOVE_TASK', index);
+    async CREATE_LIST({commit}, dataList) {
+      const data = {attributes: dataList};
+      await TodoService.createList(data)
+        .then((response) => {
+          console.log(response);
+
+          commit('SET_LIST', response.data.data.attributes);
+          return JSON.stringify(response);
+        })
+        .then((response) => console.log(response));
+    },
+    CREATE_NEW_TASK({commit}, data) {
+      const dataTask = JSON.stringify(data);
+      fetch('http://lebedev-danil-api.academy.smartworld.team/task', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization:
+            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6NzAwNFwvVXNlclwvbG9naW4iLCJpYXQiOjE2MzYyMTgwNjQsImV4cCI6MTYzNjMwNDQ2NCwibmJmIjoxNjM2MjE4MDY0LCJqdGkiOiJQZnhQWjVyemtGT2gxWUNVIiwic3ViIjo5LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.rLz0xOs_5HsbLN9CfSOQ4wfd_oZMM-Qnfk_-2T8wZww',
+        },
+        body: dataTask,
+      })
+        .then((response) => response.json())
+        .then((response) => {
+          console.log(response);
+          console.log(commit);
+        });
+    },
+    async DELETE_TASK({commit}, id) {
+      await TodoService.deleteTask(id).then(() => {
+        commit('REMOVE_TASK', id);
+      });
+    },
+    async DELETE_LIST({commit}, id) {
+      await TodoService.deleteList(id).then(() => {
+        commit('REMOVE_LIST', id);
+      });
+    },
+    CHANGE_TASK({commit}, task) {
+      TodoService.changeTask(task).then((response) => {
+        console.log(response);
+
+        commit('CHANGE_TODO_ITEM', task);
+      });
     },
   },
   mutations: {
     // SET_TASKS_TO_VUEX: (state, tasks) => {
     //   state.tasks = tasks;
     // },
+    CHANGE_TODO_ITEM(state, task) {
+      state.tasks.find((t) => t.id == task.id).is_completed =
+        !task.is_completed;
+    },
     SHOW_MODAL(state) {
       state.modalVisible = true;
     },
@@ -118,8 +160,14 @@ const store = createStore({
     SET_TASK(state, task) {
       state.tasks.push(task);
     },
-    REMOVE_TASK(state, index) {
-      state.tasks.splice(index, 1);
+    SET_LIST(state, list) {
+      state.lists.push(list);
+    },
+    REMOVE_TASK(state, id) {
+      state.tasks = state.tasks.filter((task) => task.id !== id);
+    },
+    REMOVE_LIST(state, id) {
+      state.lists = state.lists.filter((list) => list.id !== id);
     },
     SET_USER(state, data) {
       state.user = data;
@@ -157,6 +205,11 @@ const store = createStore({
       return state.token;
     },
     GET_NAME: (state) => (id) => {
+      console.log(
+        'get name',
+        state.lists.find((list) => list.id == id)
+      );
+
       return state.lists.find((list) => list.id == id).name;
     },
   },

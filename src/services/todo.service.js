@@ -19,17 +19,51 @@ class TodoService {
   //     {attributes: task}
   //   );
   // }
-  createTask(data) {
-    console.log(data);
-
-    return axios({
+  async createTask(data) {
+    return await axios({
       method: 'POST',
-      url: `${API_URL}task/create`,
+      url: `${API_URL}task`,
       headers: authHeader(),
       data: data,
-    })
-      .then((response) => JSON.stringify(response))
-      .then((response) => console.log(response));
+    });
+  }
+  async createList(data) {
+    return await axios({
+      method: 'POST',
+      url: `${API_URL}lists/create`,
+      headers: authHeader(),
+      data: data,
+    });
+  }
+  async deleteList(id) {
+    return await axios({
+      method: 'DELETE',
+      url: `${API_URL}lists/delete/${id}`,
+      headers: authHeader(),
+    });
+  }
+  async deleteTask(id) {
+    return await axios({
+      method: 'DELETE',
+      url: `${API_URL}task/delete/${id}`,
+      headers: authHeader(),
+    });
+  }
+  changeTask(task) {
+    const data = {
+      attributes: {
+        name: task.name,
+        lists_id: task.lists_id,
+        urgency: task.urgency,
+        is_completed: !task.is_completed,
+      },
+    };
+    return axios({
+      method: 'PUT',
+      url: `${API_URL}task/update/${task.id}`,
+      headers: authHeader(),
+      data: data,
+    }).then((response) => console.log(JSON.stringify(response)));
   }
 }
 export default new TodoService();

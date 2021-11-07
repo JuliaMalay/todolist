@@ -1,15 +1,28 @@
 import {createRouter, createWebHashHistory} from 'vue-router';
-import Todos from '../components/Todos';
+import Login from '../pages/Login';
+import Signup from '../pages/Signup';
+import MainPage from '../pages/MainPage';
 import TaskList from '../components/TaskList';
 
 const routes = [
-  {path: '/', component: Todos},
-  {path: '/todos/:id', name: 'todos', component: TaskList},
+  {path: '/login', component: Login},
+  {path: '/signup', component: Signup},
+  {
+    path: '/',
+    component: MainPage,
+    children: [
+      {
+        path: 'tasks/:id',
+        name: 'tasks',
+        component: TaskList,
+        props: true,
+      },
+    ],
+  },
 ];
 
 const router = createRouter({
-  // 4. Provide the history implementation to use. We are using the hash history for simplicity here.
   history: createWebHashHistory(),
-  routes, // short for `routes: routes`
+  routes,
 });
 export default router;

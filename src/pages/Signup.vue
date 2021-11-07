@@ -1,91 +1,101 @@
 <template>
-  <form @submit.prevent="handleRegister">
-    <div class="form-group" :class="{'form-group--error': v$.user.name.$error}">
-      <label class="form__label">Логин</label>
-      <input-add
-        class="form__input"
-        v-model.trim="v$.user.name.$model"
-        type="text"
-        name="name"
-        placeholder="Введите имя"
-        :class="{'is-invalid': v$.user.name.$error}"
+  <div class="wrapperRegister">
+    <form @submit.prevent="handleRegister" class="formRegister">
+      <div
+        class="form-group"
+        :class="{'form-group--error': v$.user.name.$error}"
       >
-      </input-add>
-    </div>
-    <div class="error" v-if="!v$.user.name.required">Обязательное поле</div>
-    <div class="error" v-if="!v$.user.name.minLength">
-      Имя должно содержать больше
-      {{ v$.user.name.$params.minLength.min }} символов.
-    </div>
-    <div
-      class="form-group"
-      :class="{'form-group--error': v$.user.email.$error}"
-    >
-      <label class="form__label">E-mail</label>
-      <input-add
-        v-model.trim="v$.user.email.$model"
-        type="text"
-        name="email"
-        placeholder="Введите email"
-      >
-      </input-add>
+        <label class="form__label">Логин</label>
+        <input-add
+          class="form__input input"
+          v-model.trim="v$.user.name.$model"
+          type="text"
+          name="name"
+          placeholder="Введите имя"
+          :class="{'is-invalid': v$.user.name.$error}"
+        >
+        </input-add>
+      </div>
       <div class="error" v-if="!v$.user.name.required">Обязательное поле</div>
-      <div class="error" v-if="!v$.user.email.email">
-        Введите коректный email
+      <div class="error" v-if="!v$.user.name.minLength">
+        Имя должно содержать больше
+        {{ v$.user.name.$params.minLength.min }} символов.
       </div>
-    </div>
+      <div
+        class="form-group"
+        :class="{'form-group--error': v$.user.email.$error}"
+      >
+        <label class="form__label">E-mail</label>
+        <input-add
+          class="input"
+          v-model.trim="v$.user.email.$model"
+          type="text"
+          name="email"
+          placeholder="Введите email"
+        >
+        </input-add>
+        <div class="error" v-if="!v$.user.name.required">Обязательное поле</div>
+        <div class="error" v-if="!v$.user.email.email">
+          Введите коректный email
+        </div>
+      </div>
 
-    <div>
-      <div
-        class="form-group"
-        :class="{'form-group--error': v$.user.password.$error}"
+      <div>
+        <div
+          class="form-group"
+          :class="{'form-group--error': v$.user.password.$error}"
+        >
+          <label class="form__label">Пароль</label>
+          <input
+            class="form__input"
+            v-model.trim="v$.user.password.$model"
+            placeholder="Введите пароль"
+          />
+        </div>
+        <div class="error" v-if="!v$.user.password.required">
+          Password is required.
+        </div>
+        <div class="error" v-if="!v$.user.password.minLength">
+          Password must have at least
+          {{ v$.user.password.$params.minLength.min }} letters.
+        </div>
+        <div
+          class="form-group"
+          :class="{'form-group--error': v$.repeatPassword.$error}"
+        >
+          <label class="form__label">Повторите пароль</label>
+          <input
+            class="form__input"
+            v-model.trim="v$.repeatPassword.$model"
+            placeholder="Повторите пароль"
+          />
+        </div>
+        <div class="error" v-if="!v$.repeatPassword.sameAsPassword">
+          Пароли должны быть идентичными.
+        </div>
+      </div>
+      <div class="form-group">
+        <label
+          >Уже зарегистрированны?
+          <router-link to="/login">Войти</router-link></label
+        >
+      </div>
+      <button-add
+        class="button"
+        type="submit"
+        :disabled="submitStatus === 'PENDING'"
       >
-        <label class="form__label">Пароль</label>
-        <input
-          class="form__input"
-          v-model.trim="v$.user.password.$model"
-          placeholder="Введите пароль"
-        />
-      </div>
-      <div class="error" v-if="!v$.user.password.required">
-        Password is required.
-      </div>
-      <div class="error" v-if="!v$.user.password.minLength">
-        Password must have at least
-        {{ v$.user.password.$params.minLength.min }} letters.
-      </div>
-      <div
-        class="form-group"
-        :class="{'form-group--error': v$.repeatPassword.$error}"
-      >
-        <label class="form__label">Повторите пароль</label>
-        <input
-          class="form__input"
-          v-model.trim="v$.repeatPassword.$model"
-          placeholder="Повторите пароль"
-        />
-      </div>
-      <div class="error" v-if="!v$.repeatPassword.sameAsPassword">
-        Пароли должны быть идентичными.
-      </div>
-    </div>
-    <label
-      >Уже зарегистрированны?
-      <router-link to="/login">Войти</router-link></label
-    >
-    <button-add
-      class="button"
-      type="submit"
-      :disabled="submitStatus === 'PENDING'"
-    >
-      Зарегистрироваться
-    </button-add>
-    <p class="typo__p" v-if="submitStatus === 'OK'">Спасибо за регистрацию!</p>
-    <p class="typo__p" v-if="submitStatus === 'ERROR'">
-      Пожалуйста заполните данные корректно
-    </p>
-    <p class="typo__p" v-if="submitStatus === 'PENDING'">Отправка...</p>
-  </form>
+        Зарегистрироваться
+      </button-add>
+      <p class="typo__p" v-if="submitStatus === 'OK'">
+        Спасибо за регистрацию!
+      </p>
+      <p class="typo__p" v-if="submitStatus === 'ERROR'">
+        Пожалуйста заполните данные корректно
+      </p>
+      <p class="typo__p" v-if="submitStatus === 'PENDING'">Отправка...</p>
+    </form>
+  </div>
 </template>
 
 <script>
@@ -186,5 +196,20 @@ export default {
 <style>
 .is-invalid {
   border: 1px solid red;
+}
+.wrapperRegister {
+  display: flex;
+  min-height: 100vh;
+  padding: 15px;
+  justify-content: center;
+}
+.input {
+  width: 100%;
+}
+.formRegister {
+  border: 1px solid blue;
+  max-height: 470px;
+  padding: 20px;
+  border-radius: 20px;
 }
 </style>

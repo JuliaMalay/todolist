@@ -1,20 +1,18 @@
 <template>
   <form @submit.prevent class="form">
-    <input-add
-      v-model.trim="task.name"
-      type="text"
-      name="title"
-      placeholder="Введите дело"
-    />
-    <label for="important">
-      <input
-        type="checkbox"
-        v-model="task.urgency"
-        id="important"
-      />Срочно</label
-    >
-
-    <button-add @click="createTask(task)">Создать</button-add>
+    <div class="formWrapper">
+      <input-add
+        v-model.trim="task.name"
+        type="text"
+        name="title"
+        placeholder="Введите дело"
+      />
+      <label class="checkbox" for="important">
+        <input type="checkbox" v-model="task.urgency" id="important" />
+        Срочное</label
+      >
+    </div>
+    <button-add @click="createTask(this.task)">Создать</button-add>
   </form>
 </template>
 
@@ -38,18 +36,26 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['CREATE_TASK']),
+    ...mapActions(['CREATE_TASK', 'CREATE_NEW_TASK']),
     createTask(task) {
-      console.log(task);
+      console.log('task before create', task);
 
       if (this.task.name) {
-        this.CREATE_TASK(task);
-        this.task = {
-          name: '',
-          is_completed: false,
-          list_id: this.listId,
-          urgency: false,
+        const obj = {
+          attributes: {
+            name: this.task.name,
+            lists_id: this.task.lists_id,
+            urgency: this.task.urgency,
+            is_completed: this.task.is_completed,
+          },
         };
+        console.log('obj', obj);
+
+        this.CREATE_TASK(obj);
+        this.task.name = '';
+        this.task.urgency = false;
+        this.task.is_completed = false;
+        console.log('task after create', task);
       }
     },
   },
@@ -60,5 +66,14 @@ export default {
 .form {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+}
+.formWrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+.checkbox {
+  margin-left: 5px;
 }
 </style>
