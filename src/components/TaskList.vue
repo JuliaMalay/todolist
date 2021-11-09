@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 class="listTitle">{{ GET_NAME(id) }}</h2>
+    <h2 class="list-title">{{ GET_NAME(id) }}</h2>
     <div v-if="taskList.length">
       <task
         :key="task.id"
@@ -30,20 +30,20 @@ export default {
   },
   created() {},
   computed: {
-    ...mapGetters(['GET_ALL_TASKS', 'GET_TASKS_BY_ID', 'GET_NAME']),
+    ...mapGetters(['GET_TASKS_BY_ID', 'GET_NAME']),
     taskList() {
       return this.GET_TASKS_BY_ID(this.id);
     },
   },
   methods: {
-    ...mapActions(['DELETE_TASK', 'GET_TASKS_FROM_API', 'CREATE_TASK']),
+    ...mapActions(['GET_TASKS_FROM_API']),
   },
 };
 </script>
 
 <style>
-.listTitle {
-  padding-bottom: 10px 0px;
+.list-title {
+  padding-bottom: 10px;
 }
 .task {
   display: flex;

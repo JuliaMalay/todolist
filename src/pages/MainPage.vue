@@ -1,11 +1,14 @@
 <template>
+  <header class="header">
+    <h1>TodoApp</h1>
+    <button class="logout__button" @click="logout"></button>
+  </header>
   <div class="wrapper">
     <div class="left">
       <div>
-        <!-- <lists-filter v-model="this.option"></lists-filter> -->
         <my-filter :option="option" @changeOpt="changeOpt"></my-filter>
         <div class="lists">
-          <lists :val="option"></lists>
+          <lists :value="option"></lists>
         </div>
       </div>
       <div class="lists-form">
@@ -37,13 +40,24 @@ export default {
   },
   methods: {
     ...mapActions(['GET_LISTS_FROM_API', 'DELETE_LIST']),
-    changeSelect(selected) {
-      console.log('эмит прошел', selected);
-      this.option = selected;
-      console.log(this.option);
-    },
     changeOpt(selected) {
       this.option = selected;
+    },
+    logout() {
+      this.$store.dispatch('auth/logout').then(
+        () => {
+          this.$router.push('/login');
+        },
+        (error) => {
+          this.loading = false;
+          this.message =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
+        }
+      );
     },
   },
 };
@@ -52,7 +66,7 @@ export default {
 <style>
 .wrapper {
   display: flex;
-  min-height: 100vh;
+  min-height: 95vh;
   padding: 15px;
 }
 .left {
@@ -78,5 +92,23 @@ export default {
   justify-content: space-between;
   border: 2px solid blue;
   padding: 5px;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 15px;
+  align-items: center;
+}
+.logout__button {
+  background-image: url(/img/logout.0716d3b1.png);
+  /* display: inline-block;
+  padding: 0;
+  margin: 0; */
+  vertical-align: top;
+  background-size: contain;
+  height: 50px;
+  width: 50px;
+  background-color: white;
+  cursor: pointer;
 }
 </style>

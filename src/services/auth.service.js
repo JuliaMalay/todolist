@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = 'http://lebedev-danil-api.academy.smartworld.team/';
+// const API_URL = 'http://lebedev-danil-api.academy.smartworld.team/';
+const API_URL = 'http://80.249.150.213/';
 
 class AuthService {
   login(user) {

@@ -35,22 +35,34 @@ export default {
       },
     };
   },
+  mounted() {
+    if (this.loggedIn) {
+      this.$router.push('/profile');
+    }
+  },
   methods: {
-    ...mapActions(['CREATE_TASK']),
+    ...mapActions(['CREATE_TASK', 'CREATE_TASK_NEW']),
     createTask() {
       if (this.task.name) {
         const obj = {
           attributes: {
             name: this.task.name,
-            lists_id: this.task.lists_id,
+            lists_id: parseInt(this.listId),
             urgency: this.task.urgency,
             is_completed: this.task.is_completed,
           },
         };
         this.CREATE_TASK(obj);
-        this.task.name = '';
-        this.task.urgency = false;
-        this.task.is_completed = false;
+        // this.task.name = '';
+        // this.task.urgency = false;
+        // this.task.is_completed = false;
+        // this.task.lists_id = parseInt(this.listId);
+        this.task = {
+          name: '',
+          is_completed: false,
+          lists_id: parseInt(this.listId),
+          urgency: false,
+        };
       }
     },
   },

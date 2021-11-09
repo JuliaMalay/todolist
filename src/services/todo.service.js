@@ -1,8 +1,8 @@
 import axios from 'axios';
 import authHeader from './auth-header';
 
-const API_URL = 'http://lebedev-danil-api.academy.smartworld.team/';
-
+// const API_URL = 'http://lebedev-danil-api.academy.smartworld.team/';
+const API_URL = 'http://80.249.150.213/';
 class TodoService {
   getLists() {
     return axios.get(API_URL + 'lists', {headers: authHeader()});
@@ -10,15 +10,6 @@ class TodoService {
   getTasks() {
     return axios.get(API_URL + 'task', {headers: authHeader()});
   }
-  // createTask(task) {
-  //   return axios.post(
-  //     API_URL + 'task/create',
-  //     {
-  //       headers: authHeader(),
-  //     },
-  //     {attributes: task}
-  //   );
-  // }
   async createTask(data) {
     return await axios({
       method: 'POST',

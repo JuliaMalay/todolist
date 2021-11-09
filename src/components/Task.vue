@@ -17,14 +17,14 @@
       <div>
         {{ new Date(task.created_at).toLocaleString('en-US', options) }}
       </div>
-      <button class="buttonDelete" @click="deleteTask(task.id)">X</button>
+      <button class="buttonDelete" @click="deleteTask(task)">X</button>
     </div>
   </div>
   <!-- v-model="task.checked" -->
 </template>
 
 <script>
-import {mapActions, mapGetters} from 'vuex';
+import {mapActions} from 'vuex';
 export default {
   name: 'task',
   props: {
@@ -47,18 +47,11 @@ export default {
     };
   },
   created() {},
-  computed: {
-    ...mapGetters(['GET_ALL_TASKS', 'GET_TASKS_BY_ID', 'GET_NAME']),
-  },
+  computed: {},
   methods: {
-    ...mapActions([
-      'DELETE_TASK',
-      'GET_TASKS_FROM_API',
-      'CREATE_TASK',
-      'CHANGE_TASK',
-    ]),
-    deleteTask(id) {
-      this.DELETE_TASK(id);
+    ...mapActions(['DELETE_TASK', 'CHANGE_TASK']),
+    deleteTask(task) {
+      this.DELETE_TASK(task);
     },
     changeTask(task) {
       this.CHANGE_TASK(task);

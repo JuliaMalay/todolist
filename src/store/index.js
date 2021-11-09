@@ -95,9 +95,9 @@ const store = createStore({
         return JSON.stringify(response);
       });
     },
-    async DELETE_TASK({commit}, id) {
-      await TodoService.deleteTask(id).then(() => {
-        commit('REMOVE_TASK', id);
+    async DELETE_TASK({commit}, task) {
+      await TodoService.deleteTask(task.id).then(() => {
+        commit('REMOVE_TASK', task);
       });
     },
     async DELETE_LIST({commit}, id) {
@@ -106,9 +106,7 @@ const store = createStore({
       });
     },
     CHANGE_TASK({commit}, task) {
-      TodoService.changeTask(task).then((response) => {
-        console.log(response);
-
+      TodoService.changeTask(task).then(() => {
         commit('CHANGE_TODO_ITEM', task);
       });
     },
@@ -123,18 +121,14 @@ const store = createStore({
       const listsWithId = state.tasks.filter(
         (t) => t.lists_id == task.lists_id
       );
-      console.log(listsWithId);
-
       if (!listsWithId.find((t) => t.is_completed == false)) {
         state.lists.find(
           (list) => list.id == task.lists_id
         ).is_completed = true;
-        console.log('нет невыполненных');
       } else {
         state.lists.find(
           (list) => list.id == task.lists_id
         ).is_completed = false;
-        console.log('есть невыполненные');
       }
     },
     SHOW_MODAL(state) {
@@ -147,13 +141,15 @@ const store = createStore({
       state.currentTask = payload;
     },
     SET_TASK(state, task) {
-      state.tasks.push(task);
+      state.lists.find((list) => list.id == task.lists_id).count_tasks += 1;
+      state.tasks.unshift(task);
     },
     SET_LIST(state, list) {
       state.lists.push(list);
     },
-    REMOVE_TASK(state, id) {
-      state.tasks = state.tasks.filter((task) => task.id !== id);
+    REMOVE_TASK(state, task) {
+      state.lists.find((list) => list.id == task.lists_id).count_tasks -= 1;
+      state.tasks = state.tasks.filter((t) => t.id !== task.id);
     },
     REMOVE_LIST(state, id) {
       state.lists = state.lists.filter((list) => list.id !== id);
@@ -176,7 +172,12 @@ const store = createStore({
       return state.tasks;
     },
     GET_TASKS_BY_ID: (state) => (id) => {
-      return state.tasks.filter((task) => task.lists_id == id);
+      const tasks = state.tasks.filter((task) => task.lists_id == id);
+      return tasks.sort(function (a, b) {
+        a = new Date(a.created_at);
+        b = new Date(b.created_at);
+        return a > b ? -1 : a < b ? 1 : 0;
+      });
     },
     GET_MODAL_VISIBLE(state) {
       return state.modalVisible;
@@ -197,19 +198,17 @@ const store = createStore({
       return state.lists.find((list) => list.id == id).name;
     },
     FILTERED_LISTS: (state) => (option) => {
-      console.log(option);
-
       switch (option) {
         case '1':
-          return sortFunc(state.lists);
-        case '2':
           return sortFunc(
             state.lists.filter((list) => list.is_completed == false)
           );
-        case '3':
+        case '2':
           return sortFunc(
             state.lists.filter((list) => list.is_completed == true)
           );
+        case '3':
+          return sortFunc(state.lists);
       }
     },
   },

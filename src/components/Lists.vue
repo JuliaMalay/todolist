@@ -1,11 +1,9 @@
 <template>
-  <div
-    class="list"
-    v-for="todo in lists"
-    :key="todo.id"
-    :class="{completed: todo.is_completed, empty: !todo.count_tasks}"
-  >
-    <div class="listsItems">
+  <div class="list" v-for="todo in lists" :key="todo.id">
+    <div
+      class="listsItems"
+      :class="{completed: todo.is_completed, empty: !todo.count_tasks}"
+    >
       <router-link :to="'/lists/tasks/' + todo.id" class="list_link">
         {{ todo.name }}
       </router-link>
@@ -18,7 +16,7 @@
 import {mapActions, mapGetters} from 'vuex';
 export default {
   props: {
-    val: {
+    value: {
       type: String,
     },
   },
@@ -31,7 +29,7 @@ export default {
   computed: {
     ...mapGetters([`FILTERED_LISTS`]),
     lists() {
-      return this.FILTERED_LISTS('' + this.val);
+      return this.FILTERED_LISTS('' + this.value);
     },
   },
   methods: {
@@ -53,6 +51,7 @@ export default {
   justify-content: space-between;
   cursor: pointer;
   border: 1px solid rgb(92, 102, 148);
+  background: #dbffb8;
 }
 .listsItems:hover {
   background: rgba(0, 0, 0, 0.2);
@@ -65,7 +64,6 @@ export default {
   cursor: pointer;
 }
 .list {
-  background: #dbffb8;
 }
 .completed {
   background: #d7d7d7;

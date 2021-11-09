@@ -13,6 +13,7 @@ export default {
   methods: {},
   created() {
     this.$router.push('/login');
+    // this.$router.push('/lists');
   },
 };
 </script>
