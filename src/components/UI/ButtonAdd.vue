@@ -5,6 +5,13 @@
 <script>
 export default {
   name: 'button-add',
+  directives: {
+    focus: {
+      mounted(el) {
+        el.focus();
+      },
+    },
+  },
 };
 </script>
 

@@ -7,10 +7,11 @@
       <router-link :to="'/lists/tasks/' + todo.id" class="list_link">
         {{ todo.name }}
       </router-link>
-      <!-- <button class="buttonDelete" @click="deleteList(todo.id)">X</button> -->
       <button
         class="buttonDelete"
-        @click="showModal(`Удалить список ${todo.name}?`, 'Удалить', true)"
+        @click="
+          showModal(`Удалить список ${todo.name}?`, 'Удалить', true, todo.id)
+        "
       >
         X
       </button>
@@ -18,7 +19,7 @@
         :show="modalVisible"
         :modalTitle="modalTitle"
         :rightBtnTitle="modalButton"
-        @rightBtnAction="deleteList(todo.id)"
+        @rightBtnAction="deleteList(idList)"
         @close="this.modalVisible = false"
         :twoButtons="buttons"
       ></my-modal>
@@ -42,6 +43,7 @@ export default {
       modalTitle: '',
       modalButton: '',
       buttons: false,
+      idList: '',
     };
   },
   mounted() {
@@ -58,19 +60,21 @@ export default {
   },
   methods: {
     ...mapActions(['GET_LISTS_FROM_API', 'DELETE_LIST']),
+    deleteList(todoid) {
+      console.log(todoid);
 
-    deleteList(id) {
       this.modalVisible = false;
-      this.DELETE_LIST(id);
-      if (id == this.$router.currentRoute.value.params.id) {
+      this.DELETE_LIST(todoid);
+      if (todoid == this.$router.currentRoute.value.params.id) {
         this.$router.replace({path: '/lists'});
       }
     },
-    showModal(title, button, buttons) {
+    showModal(title, button, buttons, id) {
       this.modalTitle = title;
       this.modalVisible = true;
       this.modalButton = button;
       this.buttons = buttons;
+      this.idList = id;
     },
   },
 };

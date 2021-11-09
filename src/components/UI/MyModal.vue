@@ -24,7 +24,7 @@
           >
             Отмена
           </button>
-          <button class="modal_button" @click="rightBtnAction">
+          <button autofocus class="modal_button" @click="rightBtnAction">
             {{ rightBtnTitle }}
           </button>
         </div>
@@ -94,6 +94,7 @@ export default {
   background: transparent;
   border: 1px solid blue;
   padding: 5px 10px;
+  cursor: pointer;
 }
 .modal_button-close {
   background: transparent;
@@ -101,6 +102,12 @@ export default {
   height: 20px;
   font-size: 20px;
   padding-left: 10px;
+  cursor: pointer;
+}
+.modal_button:hover {
+  background-color: blue;
+  color: white;
+  cursor: pointer;
 }
 .alone {
   justify-content: center;
