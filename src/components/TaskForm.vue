@@ -12,13 +12,25 @@
         Срочное</label
       >
     </div>
-    <button-add @click="createTask()">Создать</button-add>
+    <button-add @click="showModal(`Дело ${task.name} создано`, 'ОК', false)"
+      >Создать</button-add
+    >
   </form>
+  <my-modal
+    :show="modalVisible"
+    :modalTitle="modalTitle"
+    :rightBtnTitle="modalButton"
+    @rightBtnAction="createTask()"
+    @close="this.modalVisible = false"
+    :twoButtons="buttons"
+  ></my-modal>
 </template>
 
 <script>
 import {mapActions} from 'vuex';
+import MyModal from './UI/MyModal.vue';
 export default {
+  components: {MyModal},
   props: {
     listId: {
       type: Number,
@@ -33,6 +45,10 @@ export default {
         lists_id: parseInt(this.listId),
         urgency: false,
       },
+      modalVisible: false,
+      modalTitle: '',
+      modalButton: '',
+      buttons: false,
     };
   },
   mounted() {
@@ -43,6 +59,7 @@ export default {
   methods: {
     ...mapActions(['CREATE_TASK', 'CREATE_TASK_NEW']),
     createTask() {
+      this.modalVisible = false;
       if (this.task.name) {
         const obj = {
           attributes: {
@@ -64,6 +81,12 @@ export default {
           urgency: false,
         };
       }
+    },
+    showModal(title, button, buttons) {
+      this.modalTitle = title;
+      this.modalVisible = true;
+      this.modalButton = button;
+      this.buttons = buttons;
     },
   },
 };

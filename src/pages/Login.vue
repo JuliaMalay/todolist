@@ -53,14 +53,6 @@
       >
         Войти
       </button-add>
-
-      <p class="typo__p" v-if="submitStatus === 'OK'">
-        Thanks for your submission!
-      </p>
-      <p class="typo__p" v-if="submitStatus === 'ERROR'">
-        Please fill the form correctly.
-      </p>
-      <p class="typo__p" v-if="submitStatus === 'PENDING'">Sending...</p>
     </form>
   </div>
 </template>
@@ -82,6 +74,7 @@ export default {
         email: '',
         password: '',
       },
+      message: '',
     };
   },
   validations: {
@@ -134,6 +127,9 @@ export default {
 </script>
 
 <style>
+.error {
+  color: red;
+}
 .is-invalid {
   border: 1px solid red;
 }

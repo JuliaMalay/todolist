@@ -100,10 +100,7 @@ export default {
   align-items: center;
 }
 .logout__button {
-  background-image: url(/img/logout.0716d3b1.png);
-  /* display: inline-block;
-  padding: 0;
-  margin: 0; */
+  background-image: url('../assets/logout.png');
   vertical-align: top;
   background-size: contain;
   height: 50px;

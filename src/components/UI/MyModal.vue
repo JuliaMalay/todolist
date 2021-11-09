@@ -2,8 +2,8 @@
   <div class="modal" v-if="show" @click.stop="hideDialog">
     <div @click.stop class="modal__content">
       <div class="modal__header">
-        <span>{{ modalTitle }}</span>
-        <button @click="$emit('close')">X</button>
+        <h2>{{ modalTitle }}</h2>
+        <button class="modal_button-close" @click="$emit('close')">X</button>
       </div>
       <div class="modal__body">
         <slot></slot>
@@ -16,9 +16,17 @@
         >
           OK
         </button> -->
-        <div class="buttons">
-          <button @click="$emit('close')">Отмена</button>
-          <button @click="rightBtnAction">{{ rightBtnTitle }}</button>
+        <div class="buttons" :class="{alone: !twoButtons}">
+          <button
+            class="modal_button"
+            v-if="twoButtons"
+            @click="$emit('close')"
+          >
+            Отмена
+          </button>
+          <button class="modal_button" @click="rightBtnAction">
+            {{ rightBtnTitle }}
+          </button>
         </div>
       </div>
     </div>
@@ -27,7 +35,6 @@
 
 <script>
 export default {
-  name: 'modal-window',
   props: {
     show: {
       type: Boolean,
@@ -39,6 +46,10 @@ export default {
     rightBtnTitle: {
       type: String,
       default: 'OK',
+    },
+    twoButtons: {
+      type: Boolean,
+      default: false,
     },
   },
   methods: {
@@ -75,6 +86,24 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.modal__header {
+  margin-bottom: 20px;
+}
+.modal_button {
+  background: transparent;
+  border: 1px solid blue;
+  padding: 5px 10px;
+}
+.modal_button-close {
+  background: transparent;
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+  padding-left: 10px;
+}
+.alone {
+  justify-content: center;
 }
 .modal__body {
   display: flex;

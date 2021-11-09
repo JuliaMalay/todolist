@@ -1,7 +1,6 @@
 <template>
   <div class="task">
     <div style="display: flex; align-items: center">
-      <!-- <checkbox v-model:isChecked="checked" ></checkbox> -->
       <input
         class="taskCheckbox"
         type="checkbox"
@@ -17,16 +16,30 @@
       <div>
         {{ new Date(task.created_at).toLocaleString('en-US', options) }}
       </div>
-      <button class="buttonDelete" @click="deleteTask(task)">X</button>
+      <button
+        class="buttonDelete"
+        @click="showModal(`Удалить дело${task.name}?`, 'Удалить', true)"
+      >
+        X
+      </button>
     </div>
   </div>
-  <!-- v-model="task.checked" -->
+  <my-modal
+    :show="modalVisible"
+    :modalTitle="modalTitle"
+    :rightBtnTitle="modalButton"
+    @rightBtnAction="deleteTask(task)"
+    @close="this.modalVisible = false"
+    :twoButtons="buttons"
+  ></my-modal>
 </template>
 
 <script>
 import {mapActions} from 'vuex';
+import MyModal from './UI/MyModal.vue';
 export default {
   name: 'task',
+  components: {MyModal},
   props: {
     task: {
       type: Object,
@@ -44,6 +57,10 @@ export default {
         minute: '2-digit',
       },
       checked: this.task.is_completed,
+      modalVisible: false,
+      modalTitle: '',
+      modalButton: '',
+      buttons: false,
     };
   },
   created() {},
@@ -56,10 +73,11 @@ export default {
     changeTask(task) {
       this.CHANGE_TASK(task);
     },
-    showModal() {
-      this.$emit('showModal', this.task);
-      // this.$store.commit('SET_CURRENT_TASK', this.task);
-      // this.$store.commit('SHOW_MODAL');
+    showModal(title, button, buttons) {
+      this.modalTitle = title;
+      this.modalVisible = true;
+      this.modalButton = button;
+      this.buttons = buttons;
     },
   },
 };

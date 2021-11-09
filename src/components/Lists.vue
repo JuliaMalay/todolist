@@ -7,18 +7,42 @@
       <router-link :to="'/lists/tasks/' + todo.id" class="list_link">
         {{ todo.name }}
       </router-link>
-      <button class="buttonDelete" @click="deleteList(todo.id)">X</button>
+      <!-- <button class="buttonDelete" @click="deleteList(todo.id)">X</button> -->
+      <button
+        class="buttonDelete"
+        @click="showModal(`Удалить список ${todo.name}?`, 'Удалить', true)"
+      >
+        X
+      </button>
+      <my-modal
+        :show="modalVisible"
+        :modalTitle="modalTitle"
+        :rightBtnTitle="modalButton"
+        @rightBtnAction="deleteList(todo.id)"
+        @close="this.modalVisible = false"
+        :twoButtons="buttons"
+      ></my-modal>
     </div>
   </div>
 </template>
 
 <script>
 import {mapActions, mapGetters} from 'vuex';
+import MyModal from './UI/MyModal.vue';
 export default {
+  components: {MyModal},
   props: {
     value: {
       type: String,
     },
+  },
+  data() {
+    return {
+      modalVisible: false,
+      modalTitle: '',
+      modalButton: '',
+      buttons: false,
+    };
   },
   mounted() {
     this.GET_LISTS_FROM_API();
@@ -36,10 +60,17 @@ export default {
     ...mapActions(['GET_LISTS_FROM_API', 'DELETE_LIST']),
 
     deleteList(id) {
+      this.modalVisible = false;
       this.DELETE_LIST(id);
       if (id == this.$router.currentRoute.value.params.id) {
         this.$router.replace({path: '/lists'});
       }
+    },
+    showModal(title, button, buttons) {
+      this.modalTitle = title;
+      this.modalVisible = true;
+      this.modalButton = button;
+      this.buttons = buttons;
     },
   },
 };

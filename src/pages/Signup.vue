@@ -1,10 +1,8 @@
 <template>
+  <span class="error">{{ this.message }}</span>
   <div class="wrapperRegister">
     <form @submit.prevent="handleRegister" class="formRegister">
-      <div
-        class="form-group"
-        :class="{'form-group--error': v$.user.name.$error}"
-      >
+      <div class="form-group">
         <label class="form__label">Логин</label>
         <input-add
           class="form__input input"
@@ -21,10 +19,7 @@
         Имя должно содержать больше
         {{ v$.user.name.$params.minLength.min }} символов.
       </div>
-      <div
-        class="form-group"
-        :class="{'form-group--error': v$.user.email.$error}"
-      >
+      <div class="form-group">
         <label class="form__label">E-mail</label>
         <input-add
           class="input"
@@ -32,6 +27,7 @@
           type="text"
           name="email"
           placeholder="Введите email"
+          :class="{'is-invalid': v$.user.email.$error}"
         >
         </input-add>
         <div class="error" v-if="!v$.user.name.required">Обязательное поле</div>
@@ -41,15 +37,13 @@
       </div>
 
       <div>
-        <div
-          class="form-group"
-          :class="{'form-group--error': v$.user.password.$error}"
-        >
+        <div class="form-group">
           <label class="form__label">Пароль</label>
           <input
             class="form__input"
             v-model.trim="v$.user.password.$model"
             placeholder="Введите пароль"
+            :class="{'is-invalid': v$.user.password.$error}"
           />
         </div>
         <div class="error" v-if="!v$.user.password.required">
@@ -59,15 +53,13 @@
           Password must have at least
           {{ v$.user.password.$params.minLength.min }} letters.
         </div>
-        <div
-          class="form-group"
-          :class="{'form-group--error': v$.repeatPassword.$error}"
-        >
+        <div class="form-group">
           <label class="form__label">Повторите пароль</label>
           <input
             class="form__input"
             v-model.trim="v$.repeatPassword.$model"
             placeholder="Повторите пароль"
+            :class="{'is-invalid': v$.repeatPassword.$error}"
           />
         </div>
         <div class="error" v-if="!v$.repeatPassword.sameAsPassword">
@@ -87,13 +79,6 @@
       >
         Зарегистрироваться
       </button-add>
-      <p class="typo__p" v-if="submitStatus === 'OK'">
-        Спасибо за регистрацию!
-      </p>
-      <p class="typo__p" v-if="submitStatus === 'ERROR'">
-        Пожалуйста заполните данные корректно
-      </p>
-      <p class="typo__p" v-if="submitStatus === 'PENDING'">Отправка...</p>
     </form>
   </div>
 </template>
