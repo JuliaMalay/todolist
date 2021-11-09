@@ -12,7 +12,7 @@
         Срочное</label
       >
     </div>
-    <button-add @click="createTask(this.task)">Создать</button-add>
+    <button-add @click="createTask()">Создать</button-add>
   </form>
 </template>
 
@@ -36,10 +36,8 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['CREATE_TASK', 'CREATE_NEW_TASK']),
-    createTask(task) {
-      console.log('task before create', task);
-
+    ...mapActions(['CREATE_TASK']),
+    createTask() {
       if (this.task.name) {
         const obj = {
           attributes: {
@@ -49,13 +47,10 @@ export default {
             is_completed: this.task.is_completed,
           },
         };
-        console.log('obj', obj);
-
         this.CREATE_TASK(obj);
         this.task.name = '';
         this.task.urgency = false;
         this.task.is_completed = false;
-        console.log('task after create', task);
       }
     },
   },

@@ -104,28 +104,18 @@ export default {
   },
   created() {
     if (this.loggedIn) {
-      this.$router.push('/');
+      this.$router.push('/lists');
     }
   },
   methods: {
     ...mapActions(['LOGIN']),
-    // checkForm() {
-    //   this.v$.user.$touch();
-    //   if (!this.v$.user.$error) {
-    //     console.log('Валидация прошла успешно');
-    //     this.LOGIN(JSON.stringify(this.user));
-    //   }
-    // },
     handleLogin() {
       this.v$.user.$touch();
       if (!this.v$.user.$error) {
-        console.log('Валидация прошла успешно');
-
         this.loading = true;
-
         this.$store.dispatch('auth/login', this.user).then(
           () => {
-            this.$router.push('/');
+            this.$router.push('/lists');
           },
           (error) => {
             this.loading = false;

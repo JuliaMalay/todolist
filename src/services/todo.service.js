@@ -63,7 +63,7 @@ class TodoService {
       url: `${API_URL}task/update/${task.id}`,
       headers: authHeader(),
       data: data,
-    }).then((response) => console.log(JSON.stringify(response)));
+    });
   }
 }
 export default new TodoService();

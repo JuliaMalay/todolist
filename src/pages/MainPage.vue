@@ -1,10 +1,14 @@
 <template>
   <div class="wrapper">
     <div class="left">
-      <div class="lists">
-        <lists></lists>
+      <div>
+        <!-- <lists-filter v-model="this.option"></lists-filter> -->
+        <my-filter :option="option" @changeOpt="changeOpt"></my-filter>
+        <div class="lists">
+          <lists :val="option"></lists>
+        </div>
       </div>
-      <div class="listsForm">
+      <div class="lists-form">
         <list-form></list-form>
       </div>
     </div>
@@ -17,8 +21,31 @@
 <script>
 import ListForm from '../components/ListForm.vue';
 import Lists from '../components/Lists.vue';
+import {mapActions} from 'vuex';
+import MyFilter from '../components/MyFilter.vue';
+
 export default {
-  components: {ListForm, Lists},
+  components: {ListForm, Lists, MyFilter},
+  data() {
+    return {
+      option: '1',
+    };
+  },
+  created() {
+    this.GET_LISTS_FROM_API();
+    // this.GET_TASKS_FROM_API();
+  },
+  methods: {
+    ...mapActions(['GET_LISTS_FROM_API', 'DELETE_LIST']),
+    changeSelect(selected) {
+      console.log('эмит прошел', selected);
+      this.option = selected;
+      console.log(this.option);
+    },
+    changeOpt(selected) {
+      this.option = selected;
+    },
+  },
 };
 </script>
 
@@ -38,8 +65,9 @@ export default {
   padding: 5px;
 }
 .lists {
+  margin: 10px 0px;
 }
-.listsForm {
+.lists-form {
   display: flex;
   justify-content: space-between;
 }

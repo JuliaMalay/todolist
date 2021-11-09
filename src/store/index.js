@@ -3,6 +3,14 @@ import axios from 'axios';
 import {auth} from './auth.module';
 import TodoService from '../services/todo.service';
 
+function sortFunc(item) {
+  return item.sort((a, b) => {
+    let x = a.name.toLowerCase();
+    let y = b.name.toLowerCase();
+    return x < y ? -1 : x > y ? 1 : 0;
+  });
+}
+
 const store = createStore({
   modules: {
     auth,
@@ -16,21 +24,8 @@ const store = createStore({
     token: '',
     errors: [],
   },
-  actions: {
-    // GET_LISTS_FROM_API({commit}) {
-    //   return axios('http://lebedev-danil-api.academy.smartworld.team/Lists', {
-    //     method: 'GET',
-    //     headers: {
-    //       Authorization: `Bearer ${
-    //         JSON.parse(localStorage.getItem('user')).access_token
-    //       }`,
-    //     },
-    //   }).then((response) => {
-    //     console.log(response);
 
-    //     commit('SET_LISTS_TO_VUEX', response.data.data);
-    //   });
-    // },
+  actions: {
     GET_LISTS_FROM_API({commit}) {
       TodoService.getLists().then(
         (response) => {
@@ -91,36 +86,14 @@ const store = createStore({
     async CREATE_TASK({commit}, dataTask) {
       await TodoService.createTask(dataTask).then((response) => {
         commit('SET_TASK', response.data.data.attributes);
-        console.log(JSON.stringify(response.data.data.attributes));
       });
     },
     async CREATE_LIST({commit}, dataList) {
       const data = {attributes: dataList};
-      await TodoService.createList(data)
-        .then((response) => {
-          console.log(response);
-
-          commit('SET_LIST', response.data.data.attributes);
-          return JSON.stringify(response);
-        })
-        .then((response) => console.log(response));
-    },
-    CREATE_NEW_TASK({commit}, data) {
-      const dataTask = JSON.stringify(data);
-      fetch('http://lebedev-danil-api.academy.smartworld.team/task', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization:
-            'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6NzAwNFwvVXNlclwvbG9naW4iLCJpYXQiOjE2MzYyMTgwNjQsImV4cCI6MTYzNjMwNDQ2NCwibmJmIjoxNjM2MjE4MDY0LCJqdGkiOiJQZnhQWjVyemtGT2gxWUNVIiwic3ViIjo5LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.rLz0xOs_5HsbLN9CfSOQ4wfd_oZMM-Qnfk_-2T8wZww',
-        },
-        body: dataTask,
-      })
-        .then((response) => response.json())
-        .then((response) => {
-          console.log(response);
-          console.log(commit);
-        });
+      await TodoService.createList(data).then((response) => {
+        commit('SET_LIST', response.data.data.attributes);
+        return JSON.stringify(response);
+      });
     },
     async DELETE_TASK({commit}, id) {
       await TodoService.deleteTask(id).then(() => {
@@ -147,6 +120,22 @@ const store = createStore({
     CHANGE_TODO_ITEM(state, task) {
       state.tasks.find((t) => t.id == task.id).is_completed =
         !task.is_completed;
+      const listsWithId = state.tasks.filter(
+        (t) => t.lists_id == task.lists_id
+      );
+      console.log(listsWithId);
+
+      if (!listsWithId.find((t) => t.is_completed == false)) {
+        state.lists.find(
+          (list) => list.id == task.lists_id
+        ).is_completed = true;
+        console.log('нет невыполненных');
+      } else {
+        state.lists.find(
+          (list) => list.id == task.lists_id
+        ).is_completed = false;
+        console.log('есть невыполненные');
+      }
     },
     SHOW_MODAL(state) {
       state.modalVisible = true;
@@ -205,12 +194,23 @@ const store = createStore({
       return state.token;
     },
     GET_NAME: (state) => (id) => {
-      console.log(
-        'get name',
-        state.lists.find((list) => list.id == id)
-      );
-
       return state.lists.find((list) => list.id == id).name;
+    },
+    FILTERED_LISTS: (state) => (option) => {
+      console.log(option);
+
+      switch (option) {
+        case '1':
+          return sortFunc(state.lists);
+        case '2':
+          return sortFunc(
+            state.lists.filter((list) => list.is_completed == false)
+          );
+        case '3':
+          return sortFunc(
+            state.lists.filter((list) => list.is_completed == true)
+          );
+      }
     },
   },
 });

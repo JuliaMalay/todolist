@@ -1,10 +1,10 @@
 <template>
   <div>
     <h2 class="listTitle">{{ GET_NAME(id) }}</h2>
-    <div v-if="GET_TASKS_BY_ID(id).length">
+    <div v-if="taskList.length">
       <task
         :key="task.id"
-        v-for="task in GET_TASKS_BY_ID(id)"
+        v-for="task in taskList"
         :task="task"
         @showModal="$emit('showModal', task)"
       ></task>
@@ -31,6 +31,9 @@ export default {
   created() {},
   computed: {
     ...mapGetters(['GET_ALL_TASKS', 'GET_TASKS_BY_ID', 'GET_NAME']),
+    taskList() {
+      return this.GET_TASKS_BY_ID(this.id);
+    },
   },
   methods: {
     ...mapActions(['DELETE_TASK', 'GET_TASKS_FROM_API', 'CREATE_TASK']),

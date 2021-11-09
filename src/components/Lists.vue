@@ -1,27 +1,38 @@
 <template>
   <div
     class="list"
-    v-for="todo in this.GET_ALL_LISTS"
+    v-for="todo in lists"
     :key="todo.id"
     :class="{completed: todo.is_completed, empty: !todo.count_tasks}"
   >
-    <router-link :to="'/tasks/' + todo.id">
-      <div class="listsItems">
-        {{ todo.name
-        }}<button class="buttonDelete" @click="deleteList(todo.id)">X</button>
-      </div></router-link
-    >
+    <div class="listsItems">
+      <router-link :to="'/lists/tasks/' + todo.id" class="list_link">
+        {{ todo.name }}
+      </router-link>
+      <button class="buttonDelete" @click="deleteList(todo.id)">X</button>
+    </div>
   </div>
 </template>
 
 <script>
 import {mapActions, mapGetters} from 'vuex';
 export default {
+  props: {
+    val: {
+      type: String,
+    },
+  },
   mounted() {
     this.GET_LISTS_FROM_API();
   },
+  // computed: {
+  //   ...mapGetters(['GET_ALL_LISTS']),
+  // },
   computed: {
-    ...mapGetters(['GET_ALL_LISTS']),
+    ...mapGetters([`FILTERED_LISTS`]),
+    lists() {
+      return this.FILTERED_LISTS('' + this.val);
+    },
   },
   methods: {
     ...mapActions(['GET_LISTS_FROM_API', 'DELETE_LIST']),
@@ -29,10 +40,7 @@ export default {
     deleteList(id) {
       this.DELETE_LIST(id);
       if (id == this.$router.currentRoute.value.params.id) {
-        console.log('равны');
-
-        this.$router.push('/');
-        console.log('прошел');
+        this.$router.replace({path: '/lists'});
       }
     },
   },
@@ -64,5 +72,9 @@ export default {
 }
 .empty {
   background: #fff;
+}
+.list_link {
+  width: 100%;
+  text-align: left;
 }
 </style>

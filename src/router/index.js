@@ -8,7 +8,7 @@ const routes = [
   {path: '/login', component: Login},
   {path: '/signup', component: Signup},
   {
-    path: '/',
+    path: '/lists',
     component: MainPage,
     children: [
       {

@@ -141,19 +141,6 @@ export default {
       sameAsPassword: sameAs('password'),
     },
   },
-  // computed: {
-  //   ...mapGetters(['GET_USER']),
-  // },
-  // methods: {
-  //   ...mapActions(['SIGNUP']),
-  //   checkForm() {
-  //     this.v$.user.$touch();
-  //     if (!this.v$.user.$error) {
-  //       console.log('Валидация прошла успешно');
-  //       this.SIGNUP(JSON.stringify(this.user));
-  //     }
-  //   },
-  // },
   computed: {
     loggedIn() {
       return this.$store.state.auth.status.loggedIn;
@@ -169,25 +156,27 @@ export default {
       this.message = '';
       this.successful = false;
       this.loading = true;
-
-      this.$store.dispatch('auth/register', this.user).then(
-        (data) => {
-          this.message = data.email;
-          this.successful = true;
-          this.loading = false;
-        },
-        (error) => {
-          this.message =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-          this.successful = false;
-          this.loading = false;
-        },
-        this.$router.push('/login')
-      );
+      this.v$.user.$touch();
+      if (!this.v$.user.$error) {
+        this.$store.dispatch('auth/register', this.user).then(
+          (data) => {
+            this.message = data.email;
+            this.successful = true;
+            this.loading = false;
+          },
+          (error) => {
+            this.message =
+              (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
+              error.message ||
+              error.toString();
+            this.successful = false;
+            this.loading = false;
+          },
+          this.$router.push('/login')
+        );
+      }
     },
   },
 };
